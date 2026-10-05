@@ -100,3 +100,23 @@ export async function updateTicket(req, res, next) {
     next(error);
   }
 }
+
+/**
+ * DELETE /api/boards/:boardId/columns/:columnId/tickets/:ticketId
+ * Elimina un ticket individual.
+ * Respuesta: 204 No Content
+ */
+export async function deleteTicket(req, res, next) {
+  try {
+    const ticket = req.ticket || await Ticket.findById(req.params.ticketId);
+    if (!ticket) {
+      return res.status(404).json({ error: 'Ticket no encontrado' });
+    }
+
+    await ticket.deleteOne();
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+}

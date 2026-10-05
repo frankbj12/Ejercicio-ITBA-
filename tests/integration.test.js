@@ -382,7 +382,90 @@ describe('Fase 6: Pruebas de Integración End-to-End de la API Kanban', () => {
     });
   });
 
-  describe('7. Casos transversales: JSON inválido y rutas desconocidas', () => {
+  describe('7. DELETE /api/boards/:boardId (Borrado de Tablero en Cascada)', () => {
+    it('Happy path: debe eliminar el tablero y todas sus columnas y tickets en cascada (204 No Content)', async () => {
+      const board = await Board.create({ title: 'Tablero a borrar en cascada' });
+      const col1 = await Column.create({ title: 'Columna 1', board: board._id });
+      const col2 = await Column.create({ title: 'Columna 2', board: board._id });
+      await Ticket.create({ title: 'Ticket A', column: col1._id });
+      await Ticket.create({ title: 'Ticket B', column: col2._id });
+
+      const res = await request(app).delete(`/api/boards/${board._id}`);
+      expect(res.status).toBe(204);
+
+      // Comprobar que el tablero ya no existe
+      expect(await Board.findById(board._id)).toBeNull();
+      // Comprobar que las columnas fueron eliminadas en cascada
+      expect(await Column.countDocuments({ board: board._id })).toBe(0);
+      // Comprobar que los tickets fueron eliminados en cascada
+      expect(await Ticket.countDocuments({})).toBe(0);
+    });
+
+    it('Failure path: debe responder 404 si el tablero no existe', async () => {
+      const nonExistentId = new mongoose.Types.ObjectId().toString();
+      const res = await request(app).delete(`/api/boards/${nonExistentId}`);
+      expect(res.status).toBe(404);
+      expect(res.body.error).toMatch(/tablero no encontrado/i);
+    });
+
+    it('Failure path: debe responder 400 si el boardId tiene formato inválido', async () => {
+      const res = await request(app).delete('/api/boards/formato-invalido-123');
+      expect(res.status).toBe(400);
+      expect(res.body.error).toMatch(/no es un ObjectId válido/i);
+    });
+  });
+
+  describe('8. DELETE /api/boards/:boardId/columns/:columnId/tickets/:ticketId (Borrado de Ticket)', () => {
+    it('Happy path: debe eliminar un ticket y responder 204 No Content', async () => {
+      const board = await Board.create({ title: 'Tablero' });
+      const col = await Column.create({ title: 'Columna', board: board._id });
+      const ticket = await Ticket.create({ title: 'Ticket a eliminar', column: col._id });
+
+      const res = await request(app)
+        .delete(`/api/boards/${board._id}/columns/${col._id}/tickets/${ticket._id}`);
+
+      expect(res.status).toBe(204);
+      expect(await Ticket.findById(ticket._id)).toBeNull();
+    });
+
+    it('Failure path: debe responder 404 si el ticket no existe', async () => {
+      const board = await Board.create({ title: 'Tablero' });
+      const col = await Column.create({ title: 'Columna', board: board._id });
+      const nonExistentTicketId = new mongoose.Types.ObjectId().toString();
+
+      const res = await request(app)
+        .delete(`/api/boards/${board._id}/columns/${col._id}/tickets/${nonExistentTicketId}`);
+
+      expect(res.status).toBe(404);
+      expect(res.body.error).toMatch(/ticket no encontrado/i);
+    });
+
+    it('Failure path: debe responder 404 si el ticket pertenece a otra columna (aislamiento)', async () => {
+      const board = await Board.create({ title: 'Tablero' });
+      const col1 = await Column.create({ title: 'Col 1', board: board._id });
+      const col2 = await Column.create({ title: 'Col 2', board: board._id });
+      const ticketInCol2 = await Ticket.create({ title: 'Ticket en Col 2', column: col2._id });
+
+      const res = await request(app)
+        .delete(`/api/boards/${board._id}/columns/${col1._id}/tickets/${ticketInCol2._id}`);
+
+      expect(res.status).toBe(404);
+      expect(res.body.error).toMatch(/el ticket no pertenece a la columna indicada/i);
+    });
+
+    it('Failure path: debe responder 400 si el ticketId es inválido', async () => {
+      const board = await Board.create({ title: 'Tablero' });
+      const col = await Column.create({ title: 'Columna', board: board._id });
+
+      const res = await request(app)
+        .delete(`/api/boards/${board._id}/columns/${col._id}/tickets/id-invalido`);
+
+      expect(res.status).toBe(400);
+      expect(res.body.error).toMatch(/no es un ObjectId válido/i);
+    });
+  });
+
+  describe('9. Casos transversales: JSON inválido y rutas desconocidas', () => {
     it('debe responder 404 con JSON cuando la ruta no existe', async () => {
       const res = await request(app).get('/api/rutainexistente');
       expect(res.status).toBe(404);

@@ -1,5 +1,5 @@
 import express from 'express';
-import { createTicket, updateTicket } from '../controllers/ticketController.js';
+import { createTicket, updateTicket, deleteTicket } from '../controllers/ticketController.js';
 import { validateObjectId } from '../middleware/validateObjectId.js';
 import {
   checkBoardExists,
@@ -26,6 +26,16 @@ router.patch(
   checkColumnInBoard,
   checkTicketInColumn,
   updateTicket
+);
+
+// DELETE /api/boards/:boardId/columns/:columnId/tickets/:ticketId
+router.delete(
+  '/:ticketId',
+  validateObjectId('boardId', 'columnId', 'ticketId'),
+  checkBoardExists,
+  checkColumnInBoard,
+  checkTicketInColumn,
+  deleteTicket
 );
 
 export default router;

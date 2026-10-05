@@ -88,6 +88,26 @@
       ]
     },
     {
+      "_id": "req_board_delete_success",
+      "colId": "kanban-api-suite",
+      "containerId": "fld_boards",
+      "name": "DELETE Board - Cascade Delete (204)",
+      "url": "{{baseUrl}}/boards/{{boardId}}",
+      "method": "DELETE",
+      "sortNum": 10030,
+      "created": "2026-10-05T22:00:00.000Z",
+      "modified": "2026-10-05T22:00:00.000Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "204"
+        }
+      ]
+    },
+    {
       "_id": "req_column_create_success",
       "colId": "kanban-api-suite",
       "containerId": "fld_columns",
@@ -194,6 +214,26 @@
           "custom": "",
           "action": "equal",
           "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "req_ticket_delete_success",
+      "colId": "kanban-api-suite",
+      "containerId": "fld_tickets",
+      "name": "DELETE Ticket - Happy Path (204)",
+      "url": "{{baseUrl}}/boards/{{boardId}}/columns/{{columnId}}/tickets/{{ticketId}}",
+      "method": "DELETE",
+      "sortNum": 30030,
+      "created": "2026-10-05T22:00:00.000Z",
+      "modified": "2026-10-05T22:00:00.000Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "204"
         }
       ]
     },

@@ -1,0 +1,111 @@
+{
+  "info": {
+    "_postman_id": "kanban-api-postman-collection",
+    "name": "Kanban API RESTful Suite",
+    "description": "Colección completa para pruebas de la API Kanban con validación de contrato, aislamiento y borrado en cascada.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Boards",
+      "item": [
+        {
+          "name": "POST Create Board (201)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Proyecto Sprint 1\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/boards", "host": ["{{baseUrl}}"], "path": ["boards"] }
+          }
+        },
+        {
+          "name": "GET Board By ID - Populated (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/boards/{{boardId}}", "host": ["{{baseUrl}}"], "path": ["boards", "{{boardId}}"] }
+          }
+        },
+        {
+          "name": "DELETE Board - Cascade (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/boards/{{boardId}}", "host": ["{{baseUrl}}"], "path": ["boards", "{{boardId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Columns",
+      "item": [
+        {
+          "name": "POST Create Column (201)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"To Do\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/boards/{{boardId}}", "host": ["{{baseUrl}}"], "path": ["boards", "{{boardId}}", "columns"] }
+          }
+        },
+        {
+          "name": "DELETE Column - Cascade (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/boards/{{boardId}}/columns/{{columnId}}", "host": ["{{baseUrl}}"], "path": ["boards", "{{boardId}}", "columns", "{{columnId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Tickets",
+      "item": [
+        {
+          "name": "POST Create Ticket (201)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Configurar CI/CD\",\n  \"description\": \"Pipeline listo\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/boards/{{boardId}}/columns/{{columnId}}/tickets", "host": ["{{baseUrl}}"], "path": ["boards", "{{boardId}}", "columns", "{{columnId}}", "tickets"] }
+          }
+        },
+        {
+          "name": "PATCH Update Ticket - Idempotent (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Configurar CI/CD Finalizado\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/boards/{{boardId}}/columns/{{columnId}}/tickets/{{ticketId}}", "host": ["{{baseUrl}}"], "path": ["boards", "{{boardId}}", "columns", "{{columnId}}", "tickets", "{{ticketId}}"] }
+          }
+        },
+        {
+          "name": "DELETE Ticket (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/boards/{{boardId}}/columns/{{columnId}}/tickets/{{ticketId}}", "host": ["{{baseUrl}}"], "path": ["boards", "{{boardId}}", "columns", "{{columnId}}", "tickets", "{{ticketId}}"] }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:4000/api" },
+    { "key": "boardId", "value": "" },
+    { "key": "columnId", "value": "" },
+    { "key": "ticketId", "value": "" }
+  ]
+}

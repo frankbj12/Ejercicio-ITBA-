@@ -156,10 +156,12 @@ El servidor estará escuchando en `http://localhost:4000`.
 |---|---|---|---|
 | `POST` | `/api/boards` | Crear un tablero | `201 Created` |
 | `GET` | `/api/boards/:boardId` | Obtener un tablero con sus columnas y tickets poblados | `200 OK` |
+| `DELETE` | `/api/boards/:boardId` | Eliminar un tablero (y sus columnas y tickets en cascada) | `204 No Content` |
 | `POST` | `/api/boards/:boardId/columns` | Crear una columna dentro de un tablero | `201 Created` |
 | `DELETE` | `/api/boards/:boardId/columns/:columnId` | Eliminar una columna (y sus tickets en cascada) | `204 No Content` |
 | `POST` | `/api/boards/:boardId/columns/:columnId/tickets` | Crear un ticket dentro de una columna | `201 Created` |
 | `PATCH` | `/api/boards/:boardId/columns/:columnId/tickets/:ticketId` | Actualizar contenido y/o mover un ticket (idempotente) | `200 OK` |
+| `DELETE` | `/api/boards/:boardId/columns/:columnId/tickets/:ticketId` | Eliminar un ticket individual | `204 No Content` |
 
 ---
 

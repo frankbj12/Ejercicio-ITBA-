@@ -41,3 +41,24 @@ export async function getBoardById(req, res, next) {
     next(error);
   }
 }
+
+/**
+ * DELETE /api/boards/:boardId
+ * Elimina un tablero y todas sus columnas y tickets asociados en cascada.
+ * Respuesta: 204 No Content
+ */
+export async function deleteBoard(req, res, next) {
+  try {
+    const board = req.board || await Board.findById(req.params.boardId);
+    if (!board) {
+      return res.status(404).json({ error: 'Tablero no encontrado' });
+    }
+
+    await board.deleteOne();
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+}
+
