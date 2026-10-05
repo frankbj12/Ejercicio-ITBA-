@@ -1,4 +1,15 @@
+import dns from 'node:dns';
 import mongoose from 'mongoose';
+
+// En Windows, los resolvers de algunos routers rechazan consultas SRV (querySrv ECONNREFUSED).
+// Configuramos servidores DNS estándar para garantizar resolución de MongoDB Atlas.
+if (process.platform === 'win32') {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+  } catch {
+    // Fallback estándar
+  }
+}
 
 /**
  * Conecta a MongoDB utilizando la URI configurada en variables de entorno.
