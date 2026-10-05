@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "kanban-api-postman-collection",
     "name": "Kanban API RESTful Suite",
-    "description": "Colección completa para pruebas de la API Kanban con validación de contrato, aislamiento y borrado en cascada.",
+    "description": "Colección completa para pruebas de la API Kanban con validación de contrato, captura automática de IDs y pruebas de respuesta.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -11,6 +11,24 @@
       "item": [
         {
           "name": "POST Create Board (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "if (json._id) {",
+                  "    pm.collectionVariables.set('boardId', json._id);",
+                  "    console.log('boardId guardado automáticamente:', json._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -23,6 +41,23 @@
         },
         {
           "name": "GET Board By ID - Populated (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('El tablero contiene columnas pobladas', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('columns');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -31,6 +66,19 @@
         },
         {
           "name": "DELETE Board - Cascade (204)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 204 No Content', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "DELETE",
             "header": [],
@@ -44,18 +92,49 @@
       "item": [
         {
           "name": "POST Create Column (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "if (json._id) {",
+                  "    pm.collectionVariables.set('columnId', json._id);",
+                  "    console.log('columnId guardado automáticamente:', json._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"To Do\"\n}"
+              "raw": "{\n  \"title\": \"Por Hacer\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/boards/{{boardId}}", "host": ["{{baseUrl}}"], "path": ["boards", "{{boardId}}", "columns"] }
+            "url": { "raw": "{{baseUrl}}/boards/{{boardId}}/:columnPath", "host": ["{{baseUrl}}"], "path": ["boards", "{{boardId}}", "columns"] }
           }
         },
         {
           "name": "DELETE Column - Cascade (204)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 204 No Content', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "DELETE",
             "header": [],
@@ -69,18 +148,49 @@
       "item": [
         {
           "name": "POST Create Ticket (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "if (json._id) {",
+                  "    pm.collectionVariables.set('ticketId', json._id);",
+                  "    console.log('ticketId guardado automáticamente:', json._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Configurar CI/CD\",\n  \"description\": \"Pipeline listo\"\n}"
+              "raw": "{\n  \"title\": \"Configurar CI/CD\",\n  \"description\": \"Pipeline con GitHub Actions\"\n}"
             },
             "url": { "raw": "{{baseUrl}}/boards/{{boardId}}/columns/{{columnId}}/tickets", "host": ["{{baseUrl}}"], "path": ["boards", "{{boardId}}", "columns", "{{columnId}}", "tickets"] }
           }
         },
         {
           "name": "PATCH Update Ticket - Idempotent (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -93,6 +203,19 @@
         },
         {
           "name": "DELETE Ticket (204)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 204 No Content', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "DELETE",
             "header": [],
