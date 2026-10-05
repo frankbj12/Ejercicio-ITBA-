@@ -4,6 +4,9 @@ import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
 
+// Formatear respuestas JSON con sangría (pretty print) para visualización clara en navegadores
+app.set('json spaces', 2);
+
 // Middleware para procesar cuerpos JSON
 app.use(express.json());
 
