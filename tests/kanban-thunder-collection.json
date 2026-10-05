@@ -1,0 +1,349 @@
+{
+  "clientName": "Thunder Client",
+  "collectionName": "Kanban API Contract & Test Suite",
+  "collectionId": "kanban-api-suite",
+  "dateExported": "2026-10-05T22:00:00.000Z",
+  "version": "1.1",
+  "folders": [
+    {
+      "containerId": "",
+      "sortNum": 10000,
+      "name": "1. Boards",
+      "_id": "fld_boards"
+    },
+    {
+      "containerId": "",
+      "sortNum": 20000,
+      "name": "2. Columns",
+      "_id": "fld_columns"
+    },
+    {
+      "containerId": "",
+      "sortNum": 30000,
+      "name": "3. Tickets",
+      "_id": "fld_tickets"
+    },
+    {
+      "containerId": "",
+      "sortNum": 40000,
+      "name": "4. Negative Boundaries & Edge Cases",
+      "_id": "fld_negative"
+    }
+  ],
+  "requests": [
+    {
+      "_id": "req_board_create_success",
+      "colId": "kanban-api-suite",
+      "containerId": "fld_boards",
+      "name": "POST Create Board - Happy Path (201)",
+      "url": "{{baseUrl}}/boards",
+      "method": "POST",
+      "sortNum": 10010,
+      "created": "2026-10-05T22:00:00.000Z",
+      "modified": "2026-10-05T22:00:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"title\": \"Proyecto Sprint 1\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        },
+        {
+          "type": "json-query",
+          "custom": "json._id",
+          "action": "is-not-empty",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "_id": "req_board_get_success",
+      "colId": "kanban-api-suite",
+      "containerId": "fld_boards",
+      "name": "GET Board By ID - Populated (200)",
+      "url": "{{baseUrl}}/boards/{{boardId}}",
+      "method": "GET",
+      "sortNum": 10020,
+      "created": "2026-10-05T22:00:00.000Z",
+      "modified": "2026-10-05T22:00:00.000Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "req_column_create_success",
+      "colId": "kanban-api-suite",
+      "containerId": "fld_columns",
+      "name": "POST Create Column - Happy Path (201)",
+      "url": "{{baseUrl}}/boards/{{boardId}}/columns",
+      "method": "POST",
+      "sortNum": 20010,
+      "created": "2026-10-05T22:00:00.000Z",
+      "modified": "2026-10-05T22:00:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"title\": \"To Do\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        }
+      ]
+    },
+    {
+      "_id": "req_column_delete_success",
+      "colId": "kanban-api-suite",
+      "containerId": "fld_columns",
+      "name": "DELETE Column - Cascade Delete Tickets (204)",
+      "url": "{{baseUrl}}/boards/{{boardId}}/columns/{{columnId}}",
+      "method": "DELETE",
+      "sortNum": 20020,
+      "created": "2026-10-05T22:00:00.000Z",
+      "modified": "2026-10-05T22:00:00.000Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "204"
+        }
+      ]
+    },
+    {
+      "_id": "req_ticket_create_success",
+      "colId": "kanban-api-suite",
+      "containerId": "fld_tickets",
+      "name": "POST Create Ticket - Happy Path (201)",
+      "url": "{{baseUrl}}/boards/{{boardId}}/columns/{{columnId}}/tickets",
+      "method": "POST",
+      "sortNum": 30010,
+      "created": "2026-10-05T22:00:00.000Z",
+      "modified": "2026-10-05T22:00:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"title\": \"Configurar CI/CD\",\n  \"description\": \"Crear pipeline con GitHub Actions\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        }
+      ]
+    },
+    {
+      "_id": "req_ticket_patch_success",
+      "colId": "kanban-api-suite",
+      "containerId": "fld_tickets",
+      "name": "PATCH Update Ticket - Happy Path & Idempotent (200)",
+      "url": "{{baseUrl}}/boards/{{boardId}}/columns/{{columnId}}/tickets/{{ticketId}}",
+      "method": "PATCH",
+      "sortNum": 30020,
+      "created": "2026-10-05T22:00:00.000Z",
+      "modified": "2026-10-05T22:00:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"title\": \"Configurar CI/CD Actualizado\",\n  \"description\": \"Pipeline listo\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "req_neg_board_missing_title",
+      "colId": "kanban-api-suite",
+      "containerId": "fld_negative",
+      "name": "POST Board - Payload inválido sin título (400)",
+      "url": "{{baseUrl}}/boards",
+      "method": "POST",
+      "sortNum": 40010,
+      "created": "2026-10-05T22:00:00.000Z",
+      "modified": "2026-10-05T22:00:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        }
+      ]
+    },
+    {
+      "_id": "req_neg_board_invalid_id",
+      "colId": "kanban-api-suite",
+      "containerId": "fld_negative",
+      "name": "GET Board - ObjectId inválido (400)",
+      "url": "{{baseUrl}}/boards/invalid-object-id-123",
+      "method": "GET",
+      "sortNum": 40020,
+      "created": "2026-10-05T22:00:00.000Z",
+      "modified": "2026-10-05T22:00:00.000Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        }
+      ]
+    },
+    {
+      "_id": "req_neg_board_not_found",
+      "colId": "kanban-api-suite",
+      "containerId": "fld_negative",
+      "name": "GET Board - Inexistente (404)",
+      "url": "{{baseUrl}}/boards/507f1f77bcf86cd799439011",
+      "method": "GET",
+      "sortNum": 40030,
+      "created": "2026-10-05T22:00:00.000Z",
+      "modified": "2026-10-05T22:00:00.000Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "404"
+        }
+      ]
+    },
+    {
+      "_id": "req_neg_column_parent_not_found",
+      "colId": "kanban-api-suite",
+      "containerId": "fld_negative",
+      "name": "POST Column - Padre Board Inexistente (404)",
+      "url": "{{baseUrl}}/boards/507f1f77bcf86cd799439011/columns",
+      "method": "POST",
+      "sortNum": 40040,
+      "created": "2026-10-05T22:00:00.000Z",
+      "modified": "2026-10-05T22:00:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"title\": \"In Progress\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "404"
+        }
+      ]
+    },
+    {
+      "_id": "req_neg_ticket_isolation_failure",
+      "colId": "kanban-api-suite",
+      "containerId": "fld_negative",
+      "name": "POST Ticket - Aislamiento Fallido (Columna no pertenece al tablero) (404)",
+      "url": "{{baseUrl}}/boards/507f1f77bcf86cd799439011/columns/{{columnId}}/tickets",
+      "method": "POST",
+      "sortNum": 40050,
+      "created": "2026-10-05T22:00:00.000Z",
+      "modified": "2026-10-05T22:00:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"title\": \"Ticket huérfano\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "404"
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "baseUrl",
+      "value": "http://localhost:4000/api"
+    },
+    {
+      "name": "boardId",
+      "value": ""
+    },
+    {
+      "name": "columnId",
+      "value": ""
+    },
+    {
+      "name": "ticketId",
+      "value": ""
+    }
+  ]
+}

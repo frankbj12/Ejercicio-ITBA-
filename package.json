@@ -1,0 +1,32 @@
+{
+  "name": "kanban-api",
+  "version": "1.0.0",
+  "description": "API RESTful para gestionar una estructura Kanban jerárquica",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "kanban",
+    "express",
+    "mongoose",
+    "mongodb",
+    "rest-api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.5"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^10.1.3",
+    "supertest": "^7.0.0",
+    "vitest": "^3.0.4"
+  }
+}
